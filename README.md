@@ -1,4 +1,5 @@
-### Laravel Bitly Package ###
+Laravel Bitly Package
+=====================
 
 A laravel package for generating Bitly urls
 
@@ -10,23 +11,32 @@ For more information see [Bitly](https://bitly.com/)
 
 Laravel 5.1 or later
 
-## Installation ##
 
-Require this package with composer:
+Installation
+------------
+Installation is a quick 3 step process:
+
+1. Download laravel-bitly using composer
+2. Enable the package in app.php
+3. Configure your Bitly credentials
+
+### Step 1: Download laravel-bitly using composer
+
+Add shivella/laravel-bitly by running the command:
 
 ```
 composer require shivella/laravel-bitly
 ```
 
-## Setup ##
+### Step 2: Enable the package in app.php
 
 Register the Service in: **config/app.php**
 
-```
+``` php
 Shivella\Bitly\BitlyServiceProvider::class,
-```
+````
 
-Publish vendor config
+### Step 3: Configure Bitly credentials
 
 ```
 php artisan vendor:publish
