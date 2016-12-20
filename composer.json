@@ -2,6 +2,8 @@
   "name": "shivella/laravel-bitly",
   "description": "Laravel package for generating bitly url",
   "keywords": ["laravel", "bitly", "package"],
+  "homepage": "https://github.com/Shivella/laravel-bitly",
+  "license": "MIT",
   "authors": [
     {
       "name": "Wessel Strengholt",
