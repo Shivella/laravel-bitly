@@ -122,6 +122,49 @@ class BitlyClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
+     */
+    public function testGetUrlInvalidResponseNotFound()
+    {
+        $this->guzzle->expects($this->once())
+            ->method('send')
+            ->willReturn($this->response);
+
+        $this->response->expects($this->exactly(2))
+            ->method('getStatusCode')
+            ->willReturn(400);
+
+        $this->response->expects($this->never())
+            ->method('getBody');
+
+        $this->bitlyClient->getUrl('https:www.test.com/foo');
+    }
+
+    /**
+     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
+     */
+    public function testGetUrlInvalidResponseInvalidStatusCodeResponse()
+    {
+        $this->guzzle->expects($this->once())
+            ->method('send')
+            ->willReturn($this->response);
+
+        $this->response->expects($this->exactly(2))
+            ->method('getStatusCode')
+            ->willReturn(200);
+
+        $this->response->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->stream);
+
+        $this->stream->expects($this->once())
+            ->method('getContents')
+            ->willReturn(file_get_contents(__DIR__ . '/response_statuscode.json'));
+
+        $this->bitlyClient->getUrl('https:www.test.com/foo');
+    }
+
+    /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Request
      */
     private function createRequestMock()
