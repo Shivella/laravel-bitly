@@ -47,3 +47,10 @@ Add this in you **.env** file
 ```
 BITLY_ACCESS_TOKEN=your_secret_bitly_access_token
 ```
+
+Usage
+-----
+
+``` php
+$url = app('bitly')->getUrl(https://www.google.com/);   // http://bit.ly/nHcn3
+````
