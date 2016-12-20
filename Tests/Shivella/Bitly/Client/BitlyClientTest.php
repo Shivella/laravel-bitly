@@ -5,6 +5,7 @@ namespace Shivella\Bitly\Tests\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Shivella\Bitly\Client\BitlyClient;
 
 /**
@@ -16,7 +17,7 @@ class BitlyClientTest extends \PHPUnit_Framework_TestCase
     private $bitlyClient;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface */
-    private $guzzleClient;
+    private $guzzle;
 
     /** @var \PHPUnit_Framework_MockObject_MockObject|Request */
     private $request;
@@ -24,13 +25,17 @@ class BitlyClientTest extends \PHPUnit_Framework_TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
     private $response;
 
+    /** @var \PHPUnit_Framework_MockObject_MockObject|StreamInterface */
+    private $stream;
+
     public function setUp()
     {
-        $this->guzzleClient = $this->createClientInterfaceMock();
+        $this->guzzle = $this->createClientInterfaceMock();
         $this->request = $this->createRequestMock();
         $this->response = $this->createResponseInterfaceMock();
+        $this->stream   = $this->createStreamInterfaceMock();
 
-        $this->bitlyClient = new BitlyClient($this->guzzleClient, 'test-token');
+        $this->bitlyClient = new BitlyClient($this->guzzle, 'test-token');
     }
 
     /**
@@ -38,22 +43,46 @@ class BitlyClientTest extends \PHPUnit_Framework_TestCase
      */
     private function createClientInterfaceMock()
     {
-        return $this->getMock(ClientInterface::class);
+        return $this->getMockBuilder(ClientInterface::class)
+            ->getMock();
+    }
+
+    public function testGetUrl()
+    {
+        $this->guzzle->expects($this->once())
+            ->method('send')
+            ->willReturn($this->response);
+
+        $this->response->expects($this->exactly(2))
+            ->method('getStatusCode')
+            ->willReturn(200);
+
+        $this->response->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->stream);
+
+        $this->stream->expects($this->once())
+            ->method('getContents')
+            ->willReturn(file_get_contents(__DIR__ . '/response.json'));
+
+        $this->assertSame('http://bit.ly/1nRtGA', $this->bitlyClient->getUrl('https:www.test.com/foo'));
     }
 
     /**
-     * @expectedException \Shivella\Bitly\Exceptions\AccessDeniedException
+     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
      */
-    public function testGetUrl()
+    public function testGetUrlInvalidResponseException()
     {
-        $this->guzzleClient->expects($this->once())
+        $this->guzzle->expects($this->once())
             ->method('send')
-            ->with($this->request)
             ->willReturn($this->response);
 
         $this->response->expects($this->once())
             ->method('getStatusCode')
             ->willReturn(403);
+
+        $this->response->expects($this->never())
+            ->method('getBody');
 
         $this->bitlyClient->getUrl('https:www.test.com/foo');
     }
@@ -73,6 +102,13 @@ class BitlyClientTest extends \PHPUnit_Framework_TestCase
      */
     private function createResponseInterfaceMock()
     {
-        return $this->getMock(ResponseInterface::class);
+        return $this->getMockBuilder(ResponseInterface::class)
+            ->getMock();
+    }
+
+    private function createStreamInterfaceMock()
+    {
+        return $this->getMockBuilder(StreamInterface::class)
+            ->getMock();
     }
 }
