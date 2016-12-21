@@ -26,6 +26,7 @@
             <exclude>
                 <directory>./vendor</directory>
                 <directory>./Tests</directory>
+                <directory>./src/Shivella/Bitly/config</directory>
             </exclude>
         </whitelist>
     </filter>
