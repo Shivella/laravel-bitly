@@ -52,5 +52,5 @@ Usage
 -----
 
 ``` php
-$url = app('bitly')->getUrl(https://www.google.com/);   // http://bit.ly/nHcn3
+$url = app('bitly')->getUrl('https://www.google.com/'); // http://bit.ly/nHcn3
 ````
