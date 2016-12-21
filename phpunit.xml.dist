@@ -27,6 +27,7 @@
                 <directory>./vendor</directory>
                 <directory>./Tests</directory>
                 <directory>./src/Shivella/Bitly/config</directory>
+                <directory>./src/Shivella/Bitly/BitlyServiceProvider.php</directory>
             </exclude>
         </whitelist>
     </filter>
