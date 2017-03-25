@@ -52,7 +52,7 @@ class BitlyClient
         }
 
         try {
-            $requestUrl = sprintf('https://api-ssl.bitly.com/v3/link/lookup?url=%s&access_token=%s', $url, $this->token);
+            $requestUrl = sprintf('https://api-ssl.bitly.com/v3/shorten?longUrl=%s&access_token=%s', $url, $this->token);
             $response = $this->client->send(new Request('GET', $requestUrl));
 
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
@@ -65,15 +65,15 @@ class BitlyClient
 
             $data = json_decode($response->getBody()->getContents(), true);
 
-            if (false === isset($data['data']['link_lookup'][0]['aggregate_link'])) {
-                throw new InvalidResponseException('The response does not contain a aggregate link');
+            if (false === isset($data['data']['url'])) {
+                throw new InvalidResponseException('The response does not contain a shortened link');
             }
 
             if ($data['status_code'] !== Response::HTTP_OK) {
                 throw new InvalidResponseException('The API does not return a 200 status code');
             }
 
-            return $data['data']['link_lookup'][0]['aggregate_link'];
+            return $data['data']['url'];
 
         } catch (\Exception $exception) {
             throw new InvalidResponseException($exception->getMessage());
