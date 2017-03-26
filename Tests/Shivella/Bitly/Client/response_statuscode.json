@@ -1,1 +1,1 @@
-{"status_code": 503, "data": {"link_lookup": [{"url": "http://www.nu.nl/", "aggregate_link": "http://bit.ly/1nRtGA"}]}, "status_txt": "OK"}
+{"status_code":503,"status_txt":"OK","data":{"url":"http://bit.ly/2nk8zqP","hash":"2nk8zqP","global_hash":"SmaYx","long_url":"http://www.laravel.com/","new_hash":1}}
