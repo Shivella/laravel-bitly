@@ -23,8 +23,6 @@
     "phpunit/phpunit": "^6.1"
   },
   "autoload": {
-    "psr-4": {
-      "Shivella\\Bitly": "src/"
-    }
-  }
+    "psr-4": { "Shivella\\Bitly": "src/" }
+  },
 }
