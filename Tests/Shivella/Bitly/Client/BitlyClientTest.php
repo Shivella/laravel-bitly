@@ -1,17 +1,18 @@
 <?php
 
-namespace Shivella\Bitly\Tests\Client;
+namespace Tests\Shivella\Bitly\Client;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Shivella\Bitly\Client\BitlyClient;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class BitlyClientTest
  */
-class BitlyClientTest extends \PHPUnit_Framework_TestCase
+class BitlyClientTest extends TestCase
 {
     /** @var BitlyClient */
     private $bitlyClient;
