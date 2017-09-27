@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vinicius
- * Date: 26/09/17
- * Time: 22:16
+ * (c) Vinícius Silva <vinicius.ls@live.com>
  */
 
 namespace Shivella\Bitly\Facade;
