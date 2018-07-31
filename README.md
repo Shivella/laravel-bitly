@@ -40,7 +40,7 @@ Shivella\Bitly\BitlyServiceProvider::class,
 ### Step 3: Configure Bitly credentials
 
 ```
-php artisan vendor:publish
+php artisan vendor:publish --provider="Shivella\Bitly\BitlyServiceProvider"
 ```
 
 Add this in you **.env** file
