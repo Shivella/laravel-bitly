@@ -10,6 +10,9 @@ namespace Shivella\Bitly\Facade;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * Class Bitly
+ */
 class Bitly extends Facade
 {
     /**
