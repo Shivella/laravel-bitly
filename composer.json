@@ -19,7 +19,7 @@
         "Shivella\\Bitly\\BitlyServiceProvider"
       ],
       "aliases": {
-        "Bitly": "Shivella\\Bitly\\Facade"
+        "Bitly": "Shivella\\Bitly\\Facade\\Bitly"
       }
     }
   },
