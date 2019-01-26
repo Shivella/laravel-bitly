@@ -65,8 +65,8 @@ class BitlyClient
 
             $data = json_decode($response->getBody()->getContents(), true);
             
-            if(isset($data['status_txt']) && $data['status_txt'] === 'RATE_LIMIT_EXCEEDED'){
-	            throw new InvalidResponseException('You have reached the API rate limit, please try again later');
+            if (isset($data['status_txt']) && $data['status_txt'] === 'RATE_LIMIT_EXCEEDED') {
+		throw new InvalidResponseException('You have reached the API rate limit, please try again later');
             }
 
             if (false === isset($data['data']['url'])) {
