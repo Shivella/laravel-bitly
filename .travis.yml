@@ -3,7 +3,8 @@ language: php
 php:
   - 7.0
   - 7.1
-  - 7.2  
+  - 7.2
+  - 7.3  
 
 install:
   - composer require satooshi/php-coveralls:~0.6@stable
