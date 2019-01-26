@@ -31,8 +31,8 @@ class BitlyClientTest extends TestCase
 
     public function setUp()
     {
-        $this->guzzle = $this->createClientInterfaceMock();
-        $this->request = $this->createRequestMock();
+        $this->guzzle   = $this->createClientInterfaceMock();
+        $this->request  = $this->createRequestMock();
         $this->response = $this->createResponseInterfaceMock();
         $this->stream   = $this->createStreamInterfaceMock();
 
@@ -66,7 +66,7 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/response.json'));
 
-        $this->assertSame('http://bit.ly/1nRtGA', $this->bitlyClient->getUrl('https:www.test.com/foo'));
+        $this->assertSame('http://bit.ly/1nRtGA', $this->bitlyClient->getUrl('https://www.test.com/foo'));
     }
 
     /**
@@ -85,7 +85,7 @@ class BitlyClientTest extends TestCase
         $this->response->expects($this->never())
             ->method('getBody');
 
-        $this->bitlyClient->getUrl('https:www.test.com/foo');
+        $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
     /**
@@ -95,7 +95,7 @@ class BitlyClientTest extends TestCase
     {
         $bitlyClient = new BitlyClient($this->guzzle, null);
 
-        $bitlyClient->getUrl('https:www.test.com/foo');
+        $bitlyClient->getUrl('https://www.test.com/foo');
     }
 
     /**
@@ -119,7 +119,7 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/invalid.json'));
 
-        $this->bitlyClient->getUrl('https:www.test.com/foo');
+        $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
     /**
@@ -138,7 +138,7 @@ class BitlyClientTest extends TestCase
         $this->response->expects($this->never())
             ->method('getBody');
 
-        $this->bitlyClient->getUrl('https:www.test.com/foo');
+        $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
     /**
@@ -162,7 +162,31 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/response_statuscode.json'));
 
-        $this->bitlyClient->getUrl('https:www.test.com/foo');
+        $this->bitlyClient->getUrl('https://www.test.com/foo');
+    }
+
+    /**
+     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
+     */
+    public function testApiLimitReached()
+    {
+        $this->guzzle->expects($this->once())
+            ->method('send')
+            ->willReturn($this->response);
+
+        $this->response->expects($this->exactly(2))
+            ->method('getStatusCode')
+            ->willReturn(200);
+
+        $this->response->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->stream);
+
+        $this->stream->expects($this->once())
+            ->method('getContents')
+            ->willReturn(file_get_contents(__DIR__ . '/api_limit_reached.json'));
+
+        $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
     /**
@@ -170,7 +194,7 @@ class BitlyClientTest extends TestCase
      */
     private function createRequestMock()
     {
-        return $this->getMockBuilder(Request::class)
+        return self::getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -180,13 +204,13 @@ class BitlyClientTest extends TestCase
      */
     private function createResponseInterfaceMock()
     {
-        return $this->getMockBuilder(ResponseInterface::class)
+        return self::getMockBuilder(ResponseInterface::class)
             ->getMock();
     }
 
     private function createStreamInterfaceMock()
     {
-        return $this->getMockBuilder(StreamInterface::class)
+        return self::getMockBuilder(StreamInterface::class)
             ->getMock();
     }
 }
