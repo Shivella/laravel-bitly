@@ -83,4 +83,59 @@ class BitlyClient
             throw new InvalidResponseException($exception->getMessage());
         }
     }
+
+    /**
+     * @param string $url
+     * @param string units
+     *
+     * @throws AccessTokenMissingException
+     * @throws InvalidResponseException
+     * @throws AccessDeniedException
+     *
+     * @return string|array
+     * 
+     * https://dev.bitly.com/link_metrics.html#v3_link_clicks 
+     */
+    public function getClicks($bitlyUrl, $unit = "day", $units = -1, $rollup = true)
+    {
+        if ($this->token === null) {
+            throw new AccessTokenMissingException('Access token is not set');
+        }
+
+        try {
+            $requestUrl = sprintf(
+                'https://api-ssl.bitly.com/v3/link/clicks?link=%s&access_token=%s&unit=%s&units=-1&rollup=false', 
+                $bitlyUrl, $this->token, $unit, $units, $rollup
+            );
+
+            $response = $this->client->send(new Request('GET', $requestUrl));
+
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                throw new AccessDeniedException('Invalid access token');
+            }
+
+            if ($response->getStatusCode() !== Response::HTTP_OK) {
+                throw new InvalidResponseException('The API does not return a 200 status code');
+            }
+
+            $data = json_decode($response->getBody()->getContents(), true);
+
+            if (isset($data['status_txt']) && $data['status_txt'] === 'RATE_LIMIT_EXCEEDED') {
+		        throw new InvalidResponseException('You have reached the API rate limit, please try again later');
+            }
+
+            if (false === isset($data['data']['link_clicks'])) {
+                throw new InvalidResponseException('The response does not contain the number of clicks');
+            }
+            
+            if ($data['status_code'] !== Response::HTTP_OK) {
+                throw new InvalidResponseException('The API does not return a 200 status code');
+            }
+
+            return $data['data']['link_clicks'];
+
+        } catch (\Exception $exception) {
+            throw new InvalidResponseException($exception->getMessage());
+        }
+    }
 }

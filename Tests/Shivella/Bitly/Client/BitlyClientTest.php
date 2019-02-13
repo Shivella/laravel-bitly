@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Shivella\Bitly\Client\BitlyClient;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client;
 
 /**
  * Class BitlyClientTest
@@ -187,6 +188,27 @@ class BitlyClientTest extends TestCase
             ->willReturn(file_get_contents(__DIR__ . '/api_limit_reached.json'));
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
+    }
+
+    public function testGetClicks()
+    {
+        $this->guzzle->expects($this->once())
+            ->method('send')
+            ->willReturn($this->response);
+
+        $this->response->expects($this->exactly(2))
+            ->method('getStatusCode')
+            ->willReturn(200);
+
+        $this->response->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->stream);
+
+        $this->stream->expects($this->once())
+            ->method('getContents')
+            ->willReturn(file_get_contents(__DIR__ . '/clicks.json'));
+
+        $clicks = $this->bitlyClient->getClicks('https://bit.ly/1TgdbtS', "day", -1, true);
     }
 
     /**
