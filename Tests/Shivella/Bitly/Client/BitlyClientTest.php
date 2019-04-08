@@ -4,6 +4,7 @@ namespace Tests\Shivella\Bitly\Client;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Shivella\Bitly\Client\BitlyClient;
@@ -17,19 +18,19 @@ class BitlyClientTest extends TestCase
     /** @var BitlyClient */
     private $bitlyClient;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ClientInterface */
+    /** @var ClientInterface */
     private $guzzle;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|Request */
+    /** @var |Request */
     private $request;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface */
+    /** @var |ResponseInterface */
     private $response;
 
-    /** @var \PHPUnit_Framework_MockObject_MockObject|StreamInterface */
+    /** @var |StreamInterface */
     private $stream;
 
-    public function setUp()
+    public function setUp() : void
     {
         $this->guzzle   = $this->createClientInterfaceMock();
         $this->request  = $this->createRequestMock();
@@ -39,160 +40,144 @@ class BitlyClientTest extends TestCase
         $this->bitlyClient = new BitlyClient($this->guzzle, 'test-token');
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ClientInterface
-     */
-    private function createClientInterfaceMock()
-    {
-        return $this->getMockBuilder(ClientInterface::class)
-            ->getMock();
-    }
-
     public function testGetUrl()
     {
-        $this->guzzle->expects($this->once())
+        $this->guzzle->expects(self::once())
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects($this->exactly(2))
+        $this->response->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(200);
 
-        $this->response->expects($this->once())
+        $this->response->expects(self::once())
             ->method('getBody')
             ->willReturn($this->stream);
 
-        $this->stream->expects($this->once())
+        $this->stream->expects(self::once())
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/response.json'));
 
         $this->assertSame('http://bit.ly/1nRtGA', $this->bitlyClient->getUrl('https://www.test.com/foo'));
     }
 
-    /**
-     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
-     */
-    public function testGetUrlInvalidResponseException()
+    public function testGetUrlInvalidResponseException() : void
     {
-        $this->guzzle->expects($this->once())
+        $this->guzzle->expects(self::once())
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects($this->once())
+        $this->response->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(403);
 
-        $this->response->expects($this->never())
+        $this->response->expects(self::never())
             ->method('getBody');
+
+        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
-    /**
-     * @expectedException \Shivella\Bitly\Exceptions\AccessTokenMissingException
-     */
-    public function testGetUrlNoCredentials()
-    {
-        $bitlyClient = new BitlyClient($this->guzzle, null);
-
-        $bitlyClient->getUrl('https://www.test.com/foo');
-    }
-
-    /**
-     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
-     */
     public function testGetUrlInvalidResponse()
     {
-        $this->guzzle->expects($this->once())
+        $this->guzzle->expects(self::once())
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects($this->exactly(2))
+        $this->response->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(200);
 
-        $this->response->expects($this->once())
+        $this->response->expects(self::once())
             ->method('getBody')
             ->willReturn($this->stream);
 
-        $this->stream->expects($this->once())
+        $this->stream->expects(self::once())
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/invalid.json'));
 
+        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
+
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
-    /**
-     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
-     */
     public function testGetUrlInvalidResponseNotFound()
     {
-        $this->guzzle->expects($this->once())
+        $this->guzzle->expects(self::once())
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects($this->exactly(2))
+        $this->response->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(400);
 
-        $this->response->expects($this->never())
+        $this->response->expects(self::never())
             ->method('getBody');
+
+        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
-    /**
-     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
-     */
     public function testGetUrlInvalidResponseInvalidStatusCodeResponse()
     {
-        $this->guzzle->expects($this->once())
+        $this->guzzle->expects(self::once())
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects($this->exactly(2))
+        $this->response->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(200);
 
-        $this->response->expects($this->once())
+        $this->response->expects(self::once())
             ->method('getBody')
             ->willReturn($this->stream);
 
-        $this->stream->expects($this->once())
+        $this->stream->expects(self::once())
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/response_statuscode.json'));
 
+        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
+
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
-    /**
-     * @expectedException \Shivella\Bitly\Exceptions\InvalidResponseException
-     */
     public function testApiLimitReached()
     {
-        $this->guzzle->expects($this->once())
+        $this->guzzle->expects(self::once())
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects($this->exactly(2))
+        $this->response->expects(self::exactly(2))
             ->method('getStatusCode')
             ->willReturn(200);
 
-        $this->response->expects($this->once())
+        $this->response->expects(self::once())
             ->method('getBody')
             ->willReturn($this->stream);
 
-        $this->stream->expects($this->once())
+        $this->stream->expects(self::once())
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/api_limit_reached.json'));
+
+        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Request
+     * @return MockObject|ClientInterface
      */
-    private function createRequestMock()
+    private function createClientInterfaceMock() : MockObject
+    {
+        return $this->getMockBuilder(ClientInterface::class)->getMock();
+    }
+
+    /**
+     * @return MockObject|Request
+     */
+    private function createRequestMock() : MockObject
     {
         return self::getMockBuilder(Request::class)
             ->disableOriginalConstructor()
@@ -200,17 +185,20 @@ class BitlyClientTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ResponseInterface
+     * @return MockObject|ResponseInterface
      */
-    private function createResponseInterfaceMock()
+    private function createResponseInterfaceMock() : MockObject
     {
-        return self::getMockBuilder(ResponseInterface::class)
-            ->getMock();
+        return self::getMockBuilder(ResponseInterface::class)->getMock();
     }
 
-    private function createStreamInterfaceMock()
+    /**
+     * @return MockObject|StreamInterface
+     *
+     * @throws \ReflectionException
+     */
+    private function createStreamInterfaceMock() : MockObject
     {
-        return self::getMockBuilder(StreamInterface::class)
-            ->getMock();
+        return self::getMockBuilder(StreamInterface::class)->getMock();
     }
 }

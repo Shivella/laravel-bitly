@@ -29,9 +29,8 @@ class BitlyServiceProvider extends AppServiceProvider
      */
     public function register()
     {
-        // Country Manager
         $this->app->singleton('bitly', function () {
-            return new BitlyClient(new Client(), config('bitly.accesstoken'));
+            return new BitlyClient(new Client(), config('bitly.accesstoken', ''));
         });
     }
 

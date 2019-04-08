@@ -24,13 +24,14 @@
     }
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.1",
+    "ext-json": "*",
     "illuminate/support": "^5.1",
     "guzzlehttp/guzzle": "~6.0"
   },
   "require-dev": {
     "symfony/http-foundation": "~3.0",
-    "phpunit/phpunit": "^6.1"
+    "phpunit/phpunit": "^8.1"
   },
   "autoload": {
     "psr-0": {

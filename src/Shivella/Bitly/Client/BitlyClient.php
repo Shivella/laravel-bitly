@@ -8,10 +8,10 @@
 
 namespace Shivella\Bitly\Client;
 
+use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
 use Shivella\Bitly\Exceptions\AccessDeniedException;
-use Shivella\Bitly\Exceptions\AccessTokenMissingException;
 use Shivella\Bitly\Exceptions\InvalidResponseException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,7 +30,7 @@ class BitlyClient
      * @param ClientInterface $client
      * @param string          $token
      */
-    public function __construct(ClientInterface $client, $token)
+    public function __construct(ClientInterface $client, string $token)
     {
         $this->client = $client;
         $this->token  = $token;
@@ -39,18 +39,13 @@ class BitlyClient
     /**
      * @param string $url
      *
-     * @throws AccessTokenMissingException
      * @throws InvalidResponseException
      * @throws AccessDeniedException
      *
      * @return string
      */
-    public function getUrl($url)
+    public function getUrl(string $url) : string
     {
-        if ($this->token === null) {
-            throw new AccessTokenMissingException('Access token is not set');
-        }
-
         try {
             $requestUrl = sprintf('https://api-ssl.bitly.com/v3/shorten?longUrl=%s&access_token=%s', $url, $this->token);
             $response = $this->client->send(new Request('GET', $requestUrl));
@@ -64,7 +59,7 @@ class BitlyClient
             }
 
             $data = json_decode($response->getBody()->getContents(), true);
-            
+
             if (isset($data['status_txt']) && $data['status_txt'] === 'RATE_LIMIT_EXCEEDED') {
 		        throw new InvalidResponseException('You have reached the API rate limit, please try again later');
             }
@@ -79,7 +74,7 @@ class BitlyClient
 
             return $data['data']['url'];
 
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InvalidResponseException($exception->getMessage());
         }
     }
