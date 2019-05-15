@@ -9,6 +9,7 @@
 namespace Shivella\Bitly\Client;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Shivella\Bitly\Exceptions\AccessDeniedException;
 use Shivella\Bitly\Exceptions\AccessTokenMissingException;
@@ -36,15 +37,16 @@ class BitlyClient
         $this->token  = $token;
     }
 
-    /**
-     * @param string $url
-     *
-     * @throws AccessTokenMissingException
-     * @throws InvalidResponseException
-     * @throws AccessDeniedException
-     *
-     * @return string
-     */
+	/**
+	 * @param string $url
+	 *
+	 * @return string
+	 *
+	 * @throws InvalidResponseException
+	 * @throws AccessDeniedException*
+	 * @throws GuzzleException
+	 * @throws AccessTokenMissingException
+	 */
     public function getUrl($url)
     {
         if ($this->token === null) {
@@ -84,19 +86,19 @@ class BitlyClient
         }
     }
 
-    /**
-     * @param string $url
-     * @param string units
-     *
-     * @throws AccessTokenMissingException
-     * @throws InvalidResponseException
-     * @throws AccessDeniedException
-     *
-     * @return string|array
-     * 
-     * https://dev.bitly.com/link_metrics.html#v3_link_clicks 
-     */
-    public function getClicks($bitlyUrl, $unit = "day", $units = -1, $rollup = true)
+	/**
+	 * @param string $bitlyUrl
+	 * @param string $unit
+	 * @param int $units
+	 * @param bool $rollup
+	 *
+	 * @return string|array
+	 *
+	 * @throws AccessTokenMissingException https://dev.bitly.com/link_metrics.html#v3_link_clicks
+	 * @throws GuzzleException
+	 * @throws InvalidResponseException
+	 */
+    private function getClicks($bitlyUrl, $unit = "day", $units = -1, $rollup = true)
     {
         if ($this->token === null) {
             throw new AccessTokenMissingException('Access token is not set');
@@ -104,8 +106,8 @@ class BitlyClient
 
         try {
             $requestUrl = sprintf(
-                'https://api-ssl.bitly.com/v3/link/clicks?link=%s&access_token=%s&unit=%s&units=-1&rollup=false', 
-                $bitlyUrl, $this->token, $unit, $units, $rollup
+                'https://api-ssl.bitly.com/v3/link/clicks?link=%s&access_token=%s&unit=%s&units=%s&rollup=%s',
+                $bitlyUrl, $this->token, $unit, $units, ($rollup ? 'true' : 'false')
             );
 
             $response = $this->client->send(new Request('GET', $requestUrl));
@@ -138,4 +140,37 @@ class BitlyClient
             throw new InvalidResponseException($exception->getMessage());
         }
     }
+
+	/**
+	 * @param string $bitlyUrl
+	 * @param string $unit
+	 * @param int $units
+	 *
+	 * @return string
+	 *
+	 * @throws AccessDeniedException
+	 * @throws AccessTokenMissingException
+	 * @throws GuzzleException
+	 * @throws InvalidResponseException
+	 */
+	public function getTotalClicks($bitlyUrl, $unit = "day", $units = -1)
+	{
+		return $this->getClicks($bitlyUrl, $unit, $units, true);
+	}
+
+	/**
+	 * @param string $bitlyUrl
+	 * @param string $unit
+	 * @param int $units
+	 *
+	 * @return array
+	 *
+	 * @throws AccessTokenMissingException
+	 * @throws GuzzleException
+	 * @throws InvalidResponseException
+	 */
+	public function getArrayOfClicks($bitlyUrl, $unit = "day", $units = -1)
+	{
+		return $this->getClicks($bitlyUrl, $unit, $units, false);
+	}
 }

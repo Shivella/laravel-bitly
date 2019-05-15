@@ -37,7 +37,7 @@ class BitlyClientTest extends TestCase
         $this->response = $this->createResponseInterfaceMock();
         $this->stream   = $this->createStreamInterfaceMock();
 
-        $this->bitlyClient = new BitlyClient($this->guzzle, 'test-token');
+        $this->bitlyClient = new BitlyClient($this->guzzle, '');
     }
 
     /**
@@ -190,7 +190,7 @@ class BitlyClientTest extends TestCase
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
 
-    public function testGetClicks()
+    public function testGetTotalClicks()
     {
         $this->guzzle->expects($this->once())
             ->method('send')
@@ -208,8 +208,29 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/clicks.json'));
 
-        $clicks = $this->bitlyClient->getClicks('https://bit.ly/1TgdbtS', "day", -1, true);
+        $clicks = $this->bitlyClient->getTotalClicks('https://bit.ly/1TgdbtS', "day", -1);
     }
+
+	public function testGetArrayOfClicks()
+	{
+		$this->guzzle->expects($this->once())
+			->method('send')
+			->willReturn($this->response);
+
+		$this->response->expects($this->exactly(2))
+			->method('getStatusCode')
+			->willReturn(200);
+
+		$this->response->expects($this->once())
+			->method('getBody')
+			->willReturn($this->stream);
+
+		$this->stream->expects($this->once())
+			->method('getContents')
+			->willReturn(file_get_contents(__DIR__ . '/clicks.json'));
+
+		$clicks = $this->bitlyClient->getArrayOfClicks('https://bit.ly/1TgdbtS', "day", -1);
+	}
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|Request
