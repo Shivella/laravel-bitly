@@ -57,9 +57,9 @@ class BitlyClient
                 'Content-Type'  => 'application/json',
             ];
 
-            $trequest = new Request('POST', $requestUrl, $header, json_encode(['long_url' => $url]));
+            $request = new Request('POST', $requestUrl, $header, json_encode(['long_url' => $url]));
 
-            $response = $this->client->send($trequest);
+            $response = $this->client->send($request);
 
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
                 throw new AccessDeniedException('Invalid access token');
