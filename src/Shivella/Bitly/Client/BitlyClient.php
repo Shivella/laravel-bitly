@@ -54,9 +54,9 @@ class BitlyClient
     public function getUrl(string $url) : string
     {
         try {
-            $requestUrl = sprintf('https://api-ssl.bitly.com/v4/shorten');
+            $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
             $response = $this->client->send(
-                new Request('GET', $requestUrl, [
+                new Request('POST', $requestUrl, [
                     'json' => ['long_url' => $url]
                 ]),
                 ['headers' => $this->header]
