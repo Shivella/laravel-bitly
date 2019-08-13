@@ -15,6 +15,9 @@ use Shivella\Bitly\Exceptions\AccessDeniedException;
 use Shivella\Bitly\Exceptions\InvalidResponseException;
 use Symfony\Component\HttpFoundation\Response;
 
+use function json_decode;
+use function json_encode;
+
 /**
  * Class BitlyClient
  */
@@ -26,21 +29,14 @@ class BitlyClient
     /** @var string $token */
     private $token;
 
-    /** @var array $header */
-    private $header;
-
     /**
      * @param ClientInterface $client
      * @param string          $token
      */
-    public function __construct(ClientInterface $client, string $token)
+    public function __construct(ClientInterface $client, $token)
     {
         $this->client = $client;
-        $this->token = $token;
-        $this->header = [
-            'Authorization' => 'Bearer '.$token,
-            'Content-Type' => 'application/json',
-        ];
+        $this->token  = $token;
     }
 
     /**
@@ -51,16 +47,19 @@ class BitlyClient
      *
      * @return string
      */
-    public function getUrl(string $url) : string
+    public function getUrl(string $url): string
     {
         try {
             $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
-            $response = $this->client->send(
-                new Request('POST', $requestUrl, [
-                    'json' => ['long_url' => $url]
-                ]),
-                ['headers' => $this->header]
-            );
+
+            $header = [
+                'Authorization' => 'Bearer ' . $this->token,
+                'Content-Type'  => 'application/json',
+            ];
+
+            $trequest = new Request('POST', $requestUrl, $header, json_encode(['long_url' => $url]));
+
+            $response = $this->client->send($trequest);
 
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
                 throw new AccessDeniedException('Invalid access token');
