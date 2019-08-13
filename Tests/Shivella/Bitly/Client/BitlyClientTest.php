@@ -58,7 +58,7 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/response.json'));
 
-        $this->assertSame('http://bit.ly/1nRtGA', $this->bitlyClient->getUrl('https://www.test.com/foo'));
+        $this->assertSame('http://bit.ly/1VmfKqV', $this->bitlyClient->getUrl('https://www.test.com/foo'));
     }
 
     public function testGetUrlInvalidResponseException() : void

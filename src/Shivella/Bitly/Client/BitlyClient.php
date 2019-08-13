@@ -26,6 +26,9 @@ class BitlyClient
     /** @var string $token */
     private $token;
 
+    /** @var array $header */
+    private $header;
+
     /**
      * @param ClientInterface $client
      * @param string          $token
@@ -33,7 +36,11 @@ class BitlyClient
     public function __construct(ClientInterface $client, string $token)
     {
         $this->client = $client;
-        $this->token  = $token;
+        $this->token = $token;
+        $this->header = [
+            'Authorization' => 'Bearer '.$token,
+            'Content-Type' => 'application/json',
+        ];
     }
 
     /**
@@ -47,8 +54,13 @@ class BitlyClient
     public function getUrl(string $url) : string
     {
         try {
-            $requestUrl = sprintf('https://api-ssl.bitly.com/v3/shorten?longUrl=%s&access_token=%s', $url, $this->token);
-            $response = $this->client->send(new Request('GET', $requestUrl));
+            $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
+            $response = $this->client->send(
+                new Request('POST', $requestUrl, [
+                    'json' => ['long_url' => $url]
+                ]),
+                ['headers' => $this->header]
+            );
 
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
                 throw new AccessDeniedException('Invalid access token');
@@ -60,19 +72,11 @@ class BitlyClient
 
             $data = json_decode($response->getBody()->getContents(), true);
 
-            if (isset($data['status_txt']) && $data['status_txt'] === 'RATE_LIMIT_EXCEEDED') {
-		        throw new InvalidResponseException('You have reached the API rate limit, please try again later');
-            }
-
-            if (false === isset($data['data']['url'])) {
+            if (false === isset($data['link'])) {
                 throw new InvalidResponseException('The response does not contain a shortened link');
             }
 
-            if ($data['status_code'] !== Response::HTTP_OK) {
-                throw new InvalidResponseException('The API does not return a 200 status code');
-            }
-
-            return $data['data']['url'];
+            return $data['link'];
 
         } catch (Exception $exception) {
             throw new InvalidResponseException($exception->getMessage());
