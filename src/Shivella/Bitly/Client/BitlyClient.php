@@ -65,8 +65,8 @@ class BitlyClient
                 throw new AccessDeniedException('Invalid access token');
             }
 
-            if ($response->getStatusCode() !== Response::HTTP_OK) {
-                throw new InvalidResponseException('The API does not return a 200 status code');
+            if (!($response->getStatusCode() === Response::HTTP_OK || $response->getStatusCode() === Response::HTTP_CREATED)) {
+                throw new InvalidResponseException('The API does not return a 200 or 201 status code');
             }
 
             $data = json_decode($response->getBody()->getContents(), true);
