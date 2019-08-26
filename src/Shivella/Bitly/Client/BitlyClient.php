@@ -60,12 +60,13 @@ class BitlyClient
             $request = new Request('POST', $requestUrl, $header, json_encode(['long_url' => $url]));
 
             $response = $this->client->send($request);
+            $statusCode = $response->getStatusCode();
 
-            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+            if ($statusCode === Response::HTTP_FORBIDDEN) {
                 throw new AccessDeniedException('Invalid access token');
             }
 
-            if (!($response->getStatusCode() === Response::HTTP_OK || $response->getStatusCode() === Response::HTTP_CREATED)) {
+            if (!($statusCode === Response::HTTP_OK || $statusCode === Response::HTTP_CREATED)) {
                 throw new InvalidResponseException('The API does not return a 200 or 201 status code');
             }
 
