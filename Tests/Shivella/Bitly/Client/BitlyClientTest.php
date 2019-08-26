@@ -46,7 +46,7 @@ class BitlyClientTest extends TestCase
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects(self::exactly(2))
+        $this->response->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(200);
 
@@ -85,7 +85,7 @@ class BitlyClientTest extends TestCase
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects(self::exactly(2))
+        $this->response->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(200);
 
@@ -108,7 +108,7 @@ class BitlyClientTest extends TestCase
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects(self::exactly(2))
+        $this->response->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(400);
 
@@ -126,7 +126,7 @@ class BitlyClientTest extends TestCase
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects(self::exactly(2))
+        $this->response->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(200);
 
@@ -149,7 +149,7 @@ class BitlyClientTest extends TestCase
             ->method('send')
             ->willReturn($this->response);
 
-        $this->response->expects(self::exactly(2))
+        $this->response->expects(self::once())
             ->method('getStatusCode')
             ->willReturn(200);
 
