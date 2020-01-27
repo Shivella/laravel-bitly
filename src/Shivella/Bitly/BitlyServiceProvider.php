@@ -1,37 +1,33 @@
 <?php
-/*
-* (c) Wessel Strengholt <wessel.strengholt@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+/**
+ * (c) Wessel Strengholt <wessel.strengholt@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Shivella\Bitly;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\ServiceProvider as AppServiceProvider;
+use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Support\ServiceProvider;
 use Shivella\Bitly\Client\BitlyClient;
 
 /**
- * Class BitlyServiceProvider
+ * BitlyServiceProvider registers Bitly client as an application service.
  */
-class BitlyServiceProvider extends AppServiceProvider
+class BitlyServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
     /**
      * {@inheritdoc}
      */
     public function register()
     {
         $this->app->singleton('bitly', function () {
-            return new BitlyClient(new Client(), config('bitly.accesstoken', ''));
+            return new BitlyClient(new Client(), $this->app->make('config')->get('bitly.accesstoken', ''));
         });
+
+        $this->app->bind(BitlyClient::class, 'bitly');
     }
 
     /**
@@ -39,6 +35,23 @@ class BitlyServiceProvider extends AppServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__ . '/config/bitly.php' => config_path('bitly.php')]);
+        if ( ! $this->app->runningInConsole()) {
+            return;
+        }
+
+        $configPath = $this->app->make('path.config');
+
+        $this->publishes([__DIR__ . '/config/bitly.php' => $configPath.'/bitly.php']);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function provides()
+    {
+        return [
+            BitlyClient::class,
+            'bitly'
+        ];
     }
 }
