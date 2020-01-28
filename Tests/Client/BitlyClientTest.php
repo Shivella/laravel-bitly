@@ -71,10 +71,11 @@ class BitlyClientTest extends TestCase
             ->method('getStatusCode')
             ->willReturn(403);
 
-        $this->response->expects(self::never())
-            ->method('getBody');
+        $this->response->expects(self::any())
+            ->method('getBody')
+            ->willReturn($this->stream);
 
-        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
+        self::expectException(\Shivella\Bitly\Exceptions\InvalidResponseException::class);
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
@@ -97,7 +98,7 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/invalid.json'));
 
-        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
+        $this->expectException(\Shivella\Bitly\Exceptions\InvalidResponseException::class);
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
@@ -112,10 +113,11 @@ class BitlyClientTest extends TestCase
             ->method('getStatusCode')
             ->willReturn(400);
 
-        $this->response->expects(self::never())
-            ->method('getBody');
+        $this->response->expects(self::any())
+            ->method('getBody')
+            ->willReturn($this->stream);
 
-        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
+        self::expectException(\Shivella\Bitly\Exceptions\InvalidResponseException::class);
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
@@ -161,7 +163,7 @@ class BitlyClientTest extends TestCase
             ->method('getContents')
             ->willReturn(file_get_contents(__DIR__ . '/api_limit_reached.json'));
 
-        self::expectException('\Shivella\Bitly\Exceptions\InvalidResponseException');
+        self::expectException(\Shivella\Bitly\Exceptions\InvalidResponseException::class);
 
         $this->bitlyClient->getUrl('https://www.test.com/foo');
     }
