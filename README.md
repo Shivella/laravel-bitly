@@ -1,7 +1,7 @@
 Laravel Bitly Package
 =====================
 
-A laravel package for generating Bitly urls
+A laravel package for generating Bitly short URLs.
 
 For more information see [Bitly](https://bitly.com/)
 
@@ -53,29 +53,82 @@ BITLY_ACCESS_TOKEN=your_secret_bitly_access_token
 
 Register the Bitly Facade in: **config/app.php**
 
-``` php
-'aliases' => [
+```php
+<?php
+
+return [
+    'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
-        ...
+        // ...
         'Bitly' => Shivella\Bitly\Facade\Bitly::class,
+    ],
+    // ...
+];
 ````
 
 Usage
 -----
 
-``` php
+```php
+<?php
+
 $url = app('bitly')->getUrl('https://www.google.com/'); // http://bit.ly/nHcn3
 ````
 
 Or if you want to use facade, add this in your class after namespace declaration:
 
-``` php
+```php
+<?php
+
 use Bitly;
 ```
+
 Then you can use it directly by calling `Bitly::` like:
-``` php
+
+```php
+<?php
+
 $url = Bitly::getUrl('https://www.google.com/'); // http://bit.ly/nHcn3
 ````
+
+### Testing
+
+In your unit tests you may use `BitlyClientFake` class instead of regular client.
+It will create a fake short URLs using hashing without calling an external REST API, which will speed up your unit tests.
+Fake might be setup via DI at your `\Tests\TestCase::createApplication()` implementation:
+
+```php
+<?php
+
+namespace Tests;
+
+use Illuminate\Contracts\Console\Kernel;
+use Shivella\Bitly\Testing\BitlyClientFake;
+
+trait CreatesApplication
+{
+    /**
+     * Creates the application.
+     *
+     * @return \Illuminate\Foundation\Application
+     */
+    public function createApplication()
+    {
+        $app = require __DIR__.'/../bootstrap/app.php';
+
+        $app->make(Kernel::class)->bootstrap();
+
+        // swap Bitly client by a fake
+        $app->singleton('bitly', function () {
+            return new BitlyClientFake();
+        });
+
+        return $app;
+    }
+}
+```
+
+As an alternative you may use `\Shivella\Bitly\Facade\Bitly::fake()` method to swap regular client by a fake.

@@ -9,6 +9,7 @@
 namespace Shivella\Bitly\Facade;
 
 use Illuminate\Support\Facades\Facade;
+use Shivella\Bitly\Testing\BitlyClientFake;
 
 /**
  * Bitly is a facade for the Bitly client.
@@ -25,5 +26,17 @@ class Bitly extends Facade
     protected static function getFacadeAccessor()
     {
         return 'bitly';
+    }
+
+    /**
+     * Replace the bound instance with a fake.
+     *
+     * @return \Shivella\Bitly\Testing\BitlyClientFake
+     */
+    public static function fake()
+    {
+        static::swap($fake = new BitlyClientFake);
+
+        return $fake;
     }
 }
