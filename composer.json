@@ -14,9 +14,6 @@
       "email": "wessel.strengholt@gmail.com"
     }
   ],
-  "autoload-dev": {
-    "psr-4": { "Tests\\": "tests/" }
-  },
   "extra": {
     "laravel": {
       "providers": [
@@ -38,8 +35,13 @@
     "phpunit/phpunit": "^8.1"
   },
   "autoload": {
-    "psr-0": {
-      "Shivella\\Bitly": "src/"
+    "psr-4": {
+      "Shivella\\Bitly\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Shivella\\Bitly\\Test\\": "Tests"
     }
   }
 }

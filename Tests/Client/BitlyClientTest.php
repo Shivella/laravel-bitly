@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Shivella\Bitly\Client;
+namespace Shivella\Bitly\Client\Tests;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Request;
@@ -194,8 +194,6 @@ class BitlyClientTest extends TestCase
 
     /**
      * @return MockObject|StreamInterface
-     *
-     * @throws \ReflectionException
      */
     private function createStreamInterfaceMock() : MockObject
     {
