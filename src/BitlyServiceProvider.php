@@ -41,7 +41,7 @@ class BitlyServiceProvider extends ServiceProvider implements DeferrableProvider
 
         $configPath = $this->app->make('path.config');
 
-        $this->publishes([__DIR__ . '/config/bitly.php' => $configPath.'/bitly.php']);
+        $this->publishes([__DIR__ . '/../config/bitly.php' => $configPath.'/bitly.php']);
     }
 
     /**
