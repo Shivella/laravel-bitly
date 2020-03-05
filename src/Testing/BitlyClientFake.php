@@ -2,6 +2,8 @@
 
 namespace Shivella\Bitly\Testing;
 
+use Shivella\Bitly\Client\BitlyClient;
+
 /**
  * BitlyClientFake is a mock for the regular Bitly client.
  *
@@ -13,8 +15,15 @@ namespace Shivella\Bitly\Testing;
  * @see \Shivella\Bitly\Client\BitlyClient
  * @see \Shivella\Bitly\Facade\Bitly::fake()
  */
-class BitlyClientFake
+class BitlyClientFake extends BitlyClient
 {
+    public function __construct()
+    {
+        // Unlike with other methods, PHP will not generate an E_STRICT level error message when __construct() is overridden
+        // with different parameters than the parent __construct() method has.
+        // @see https://www.php.net/manual/en/language.oop5.decon.php
+    }
+
     /**
      * @param string $url raw URL.
      * @return string shorten URL.
