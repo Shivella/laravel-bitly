@@ -28,7 +28,7 @@
     "php": ">=7.1",
     "ext-json": "*",
     "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0",
-    "guzzlehttp/guzzle": "~6.0 || &7.0.1"
+    "guzzlehttp/guzzle": "~6.0 || ^7.0.1"
   },
   "require-dev": {
     "symfony/http-foundation": "^5.0",
