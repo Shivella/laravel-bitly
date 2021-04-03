@@ -61,7 +61,7 @@ class BitlyClient
 
             $response = $this->client->send($request);
         } catch (RequestException $e) {
-            if ($e->getResponse()->getStatusCode() === Response::HTTP_FORBIDDEN) {
+            if ($e->getResponse() !== null && $e->getResponse()->getStatusCode() === Response::HTTP_FORBIDDEN) {
                 throw new AccessDeniedException('Invalid access token.', $e->getCode(), $e);
             }
 
