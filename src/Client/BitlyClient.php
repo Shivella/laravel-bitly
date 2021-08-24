@@ -41,13 +41,15 @@ class BitlyClient
 
     /**
      * @param string $url raw URL.
-     *
-     * @throws \Shivella\Bitly\Exceptions\AccessDeniedException
-     * @throws \Shivella\Bitly\Exceptions\InvalidResponseException
+     * @param string|null $domain
+     * @param string|null $group_guid
      *
      * @return string shorten URL.
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Shivella\Bitly\Exceptions\AccessDeniedException
+     * @throws \Shivella\Bitly\Exceptions\InvalidResponseException
      */
-    public function getUrl(string $url): string
+    public function getUrl(string $url, string $domain = null, string $group_guid = null): string
     {
         $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
 
@@ -56,8 +58,14 @@ class BitlyClient
             'Content-Type'  => 'application/json',
         ];
 
+        $data = array_filter([
+            'long_url' => $url,
+            'domain' => $url,
+            'group_guid' => $group_guid,
+        ]);
+
         try {
-            $request = new Request('POST', $requestUrl, $header, json_encode(['long_url' => $url]));
+            $request = new Request('POST', $requestUrl, $header, json_encode($data));
 
             $response = $this->client->send($request);
         } catch (RequestException $e) {
