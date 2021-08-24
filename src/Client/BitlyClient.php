@@ -49,7 +49,7 @@ class BitlyClient
      * @throws \Shivella\Bitly\Exceptions\AccessDeniedException
      * @throws \Shivella\Bitly\Exceptions\InvalidResponseException
      */
-    public function getUrl(string $url, string $domain = null, string $group_guid = null): string
+    public function getUrl(string $url, ?string $domain = null, ?string $group_guid = null): string
     {
         $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
 

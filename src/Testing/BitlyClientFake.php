@@ -28,7 +28,7 @@ class BitlyClientFake extends BitlyClient
      * @param string $url raw URL.
      * @return string shorten URL.
      */
-    public function getUrl(string $url): string
+    public function getUrl(string $url, ?string $domain = NULL, ?string $group_guid = NULL): string
     {
         return 'http://bit.ly/'.substr(sha1($url), 0, 6);
     }
