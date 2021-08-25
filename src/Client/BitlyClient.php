@@ -60,7 +60,7 @@ class BitlyClient
 
         $data = array_filter([
             'long_url' => $url,
-            'domain' => $url,
+            'domain' => $domain,
             'group_guid' => $group_guid,
         ]);
 
