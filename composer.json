@@ -32,7 +32,7 @@
   },
   "require-dev": {
     "symfony/http-foundation": "^5.0",
-    "phpunit/phpunit": "^8.1"
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "psr-4": {
@@ -43,5 +43,10 @@
     "psr-4": {
       "Shivella\\Bitly\\Test\\": "Tests"
     }
+  },
+  "scripts": {
+      "tests": [
+          "phpunit tests"
+      ]
   }
 }

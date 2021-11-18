@@ -1,37 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         bootstrap="vendor/autoload.php">
-    <php>
-        <ini name="error_reporting" value="E_ALL" />
-    </php>
-
-    <testsuites>
-        <testsuite name="Bitly Laravel package">
-            <directory>./Tests/</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./</directory>
-            <exclude>
-                <directory>./vendor</directory>
-                <directory>./Tests</directory>
-                <directory>./src/config</directory>
-                <directory>./src/BitlyServiceProvider.php</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-
-    <logging>
-        <log type="junit" target="build/logs/junit.xml"/>
-    </logging>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false" bootstrap="vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./</directory>
+    </include>
+    <exclude>
+      <directory>./vendor</directory>
+      <directory>./Tests</directory>
+      <directory>./src/config</directory>
+      <directory>./src/BitlyServiceProvider.php</directory>
+    </exclude>
+  </coverage>
+  <php>
+    <ini name="error_reporting" value="E_ALL"/>
+  </php>
+  <testsuites>
+    <testsuite name="Bitly Laravel package">
+      <directory>./Tests/</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+    <junit outputFile="build/logs/junit.xml"/>
+  </logging>
 </phpunit>
