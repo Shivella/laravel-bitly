@@ -5,7 +5,7 @@ A laravel package for generating Bitly short URLs.
 
 For more information see [Bitly](https://bitly.com/)
 
-[![Build Status](https://github.com/Shivella/laravel-bitly/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Shivella/laravel-bitly/actions) [![Latest Stable Version](https://poser.pugx.org/shivella/laravel-bitly/v/stable)](https://packagist.org/packages/shivella/laravel-bitly) [![License](https://poser.pugx.org/shivella/laravel-bitly/license)](https://packagist.org/packages/shivella/laravel-bitly) [![Total Downloads](https://poser.pugx.org/shivella/laravel-bitly/downloads)](https://packagist.org/packages/shivella/laravel-bitly) [![Coverage Status](https://coveralls.io/repos/github/Shivella/laravel-bitly/badge.svg)](https://coveralls.io/github/Shivella/laravel-bitly)
+[![Build Status](https://github.com/Shivella/laravel-bitly/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Shivella/laravel-bitly/actions) [![Latest Stable Version](https://poser.pugx.org/shivella/laravel-bitly/v/stable)](https://packagist.org/packages/shivella/laravel-bitly) [![License](https://poser.pugx.org/shivella/laravel-bitly/license)](https://packagist.org/packages/shivella/laravel-bitly) [![Total Downloads](https://poser.pugx.org/shivella/laravel-bitly/downloads)](https://packagist.org/packages/shivella/laravel-bitly)
 
 ## Requirements ##
 
