@@ -46,7 +46,7 @@
   },
   "scripts": {
       "tests": [
-          "phpunit tests"
+          "phpunit Tests"
       ]
   }
 }
