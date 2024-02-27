@@ -1,52 +1,59 @@
 {
-  "name": "shivella/laravel-bitly",
-  "description": "Laravel package for generating bitly url",
-  "keywords": ["laravel", "bitly", "package", "short", "url", "link"],
-  "homepage": "https://github.com/Shivella/laravel-bitly",
-  "license": "MIT",
-  "support": {
-    "issues": "https://github.com/Shivella/laravel-bitly/issues",
-    "source": "https://github.com/Shivella/laravel-bitly"
-  },
-  "authors": [
-    {
-      "name": "Wessel Strengholt",
-      "email": "wessel.strengholt@gmail.com"
+    "name": "shivella/laravel-bitly",
+    "description": "Laravel package for generating bitly url",
+    "keywords": [
+        "laravel",
+        "bitly",
+        "package",
+        "short",
+        "url",
+        "link"
+    ],
+    "homepage": "https://github.com/Shivella/laravel-bitly",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/Shivella/laravel-bitly/issues",
+        "source": "https://github.com/Shivella/laravel-bitly"
+    },
+    "authors": [
+        {
+            "name": "Wessel Strengholt",
+            "email": "wessel.strengholt@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Shivella\\Bitly\\BitlyServiceProvider"
+            ],
+            "aliases": {
+                "Bitly": "Shivella\\Bitly\\Facade\\Bitly"
+            }
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "ext-json": "*",
+        "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "guzzlehttp/guzzle": "~6.0 || ^7.0.1 || ^7.1 || ^7.2 || ^7.3 || ^7.4 || ^7.5"
+    },
+    "require-dev": {
+        "symfony/http-foundation": "^5.0",
+        "phpunit/phpunit": "^9.5 || ^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shivella\\Bitly\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shivella\\Bitly\\Test\\": "Tests"
+        }
+    },
+    "scripts": {
+        "tests": [
+            "phpunit Tests"
+        ]
     }
-  ],
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Shivella\\Bitly\\BitlyServiceProvider"
-      ],
-      "aliases": {
-        "Bitly": "Shivella\\Bitly\\Facade\\Bitly"
-      }
-    }
-  },
-  "require": {
-    "php": ">=7.1",
-    "ext-json": "*",
-    "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0",
-    "guzzlehttp/guzzle": "~6.0 || ^7.0.1 || ^7.1 || ^7.2 || ^7.3 || ^7.4 || ^7.5"
-  },
-  "require-dev": {
-    "symfony/http-foundation": "^5.0",
-    "phpunit/phpunit": "^9.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "Shivella\\Bitly\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Shivella\\Bitly\\Test\\": "Tests"
-    }
-  },
-  "scripts": {
-      "tests": [
-          "phpunit Tests"
-      ]
-  }
 }
