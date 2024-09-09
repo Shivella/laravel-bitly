@@ -63,6 +63,7 @@ class BitlyClient
             'domain' => $domain,
             'group_guid' => $group_guid,
         ]);
+        if($title) $data['title'] = $title;
 
         try {
             $request = new Request('POST', $requestUrl, $header, json_encode($data));
