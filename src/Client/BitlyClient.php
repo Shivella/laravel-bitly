@@ -49,9 +49,9 @@ class BitlyClient
      * @throws \Shivella\Bitly\Exceptions\AccessDeniedException
      * @throws \Shivella\Bitly\Exceptions\InvalidResponseException
      */
-    public function getUrl(string $url, ?string $domain = null, ?string $group_guid = null): string
+    public function getUrl(string $url, ?string $domain = null, ?string $group_guid = null, ?string $title = null, $requestUrl = 'https://api-ssl.bitly.com/v4/shorten'): string
     {
-        $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
+        ## $requestUrl = 'https://api-ssl.bitly.com/v4/shorten';
 
         $header = [
             'Authorization' => 'Bearer ' . $this->token,
@@ -63,6 +63,7 @@ class BitlyClient
             'domain' => $domain,
             'group_guid' => $group_guid,
         ]);
+        if($title) $data['title'] = $title;
 
         try {
             $request = new Request('POST', $requestUrl, $header, json_encode($data));
@@ -98,5 +99,8 @@ class BitlyClient
         }
 
         throw new InvalidResponseException('The response does not contain a shortened link. Response: '.$content);
+    }
+    public function create(string $url, ?string $title = null, ?string $domain = null, ?string $group_guid = null){
+        return $this->getUrl($url, $domain, $group_guid , $title, 'https://api-ssl.bitly.com/v4/bitlinks');
     }
 }
