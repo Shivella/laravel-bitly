@@ -34,11 +34,11 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
-        "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
         "guzzlehttp/guzzle": "~6.0 || ^7.0.1 || ^7.1 || ^7.2 || ^7.3 || ^7.4 || ^7.5"
     },
     "require-dev": {
-        "symfony/http-foundation": "^5.0",
+        "symfony/http-foundation": "^5.0 || ^7.2",
         "phpunit/phpunit": "^9.5 || ^10.5"
     },
     "autoload": {
