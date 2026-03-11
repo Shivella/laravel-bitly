@@ -17,6 +17,7 @@ use Shivella\Bitly\Testing\BitlyClientFake;
  * @see \Shivella\Bitly\Client\BitlyClient
  *
  * @method string getUrl(string $url)
+ * @method string create(string $url, string $title)
  */
 class Bitly extends Facade
 {
